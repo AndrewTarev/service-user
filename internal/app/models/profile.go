@@ -34,7 +34,7 @@ func (u *UserProfileInput) Validate() error {
 }
 
 type UserProfileUpdate struct {
-	UserID    uuid.UUID `json:"-" validate:"required"` // Берется из JWT
+	UserID    uuid.UUID `json:"-"` // Берется из JWT
 	FirstName string    `json:"first_name" validate:"omitempty,min=2,max=50"`
 	LastName  string    `json:"last_name" validate:"omitempty,min=2,max=50"`
 	City      string    `json:"city" validate:"omitempty,min=2,max=100"`

@@ -12,18 +12,6 @@ CREATE TABLE IF NOT EXISTS user_profiles (
 
 CREATE INDEX idx_user_profiles_user_id ON user_profiles(user_id);
 
-CREATE TABLE IF NOT EXISTS user_bank_cards (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    user_profile_id UUID NOT NULL,
-    card_number VARCHAR(255) NOT NULL,
-    expiration_date TIMESTAMP NOT NULL,
-    card_holder_name VARCHAR(255) NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_profile_id) REFERENCES user_profiles(id) ON DELETE CASCADE
-);
-
-CREATE INDEX idx_user_bank_cards_profile_id ON user_bank_cards(user_profile_id);
 
 -- корзина товаров
 CREATE TABLE cart (
@@ -56,12 +44,6 @@ $$ LANGUAGE plpgsql;
 -- Триггер для user_profiles
 CREATE TRIGGER set_timestamp_user_profiles
     BEFORE UPDATE ON user_profiles
-    FOR EACH ROW
-    EXECUTE FUNCTION update_updated_at_column();
-
--- Триггер для user_bank_cards
-CREATE TRIGGER set_timestamp_user_bank_cards
-    BEFORE UPDATE ON user_bank_cards
     FOR EACH ROW
     EXECUTE FUNCTION update_updated_at_column();
 

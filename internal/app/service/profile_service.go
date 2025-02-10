@@ -34,7 +34,12 @@ func (p *Profile) GetProfile(ctx context.Context, userID uuid.UUID) (models.User
 }
 
 func (p *Profile) UpdateProfile(ctx context.Context, profile models.UserProfileUpdate) error {
-	err := p.repo.UpdateProfile(ctx, profile)
+	_, err := p.GetProfile(ctx, profile.UserID)
+	if err != nil {
+		return err
+	}
+
+	err = p.repo.UpdateProfile(ctx, profile)
 	if err != nil {
 		return err
 	}
