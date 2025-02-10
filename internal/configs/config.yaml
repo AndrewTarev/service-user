@@ -1,0 +1,19 @@
+server:
+  host: "localhost"             # Адрес сервера
+  port: 8081                    # Порт сервера
+  read_timeout: 5s              # Таймаут чтения запроса
+  write_timeout: 10s            # Таймаут записи ответа
+  max_header_bytes: 1048576     # Максимальный размер заголовков (1 MB)
+
+logging:
+  level: "debug"                # Уровень логирования: debug, info, warn, error
+  format: "json"                # Формат логов: text, json
+  output_file: ""               # Файл для записи логов (пусто для вывода в консоль)
+
+database:
+  dsn: postgres://postgres:postgres@localhost:5433/service-user?sslmode=disable
+  migrate_path: file:///app/internal/app/repository/migrations
+
+auth:
+  url: http://localhost:8080/api/v1
+  public_key: internal/certs/jwt-public.pem

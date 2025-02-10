@@ -1,0 +1,209 @@
+basePath: /api/v1
+definitions:
+  middleware.ValidationErrorResponse:
+    properties:
+      error:
+        properties:
+          code:
+            type: integer
+          fields:
+            additionalProperties:
+              type: string
+            description: Поля с ошибками
+            type: object
+          message:
+            type: string
+        type: object
+    type: object
+  models.ProfileIdResponse:
+    properties:
+      id:
+        type: string
+    type: object
+  models.SuccessResponse:
+    properties:
+      data: {}
+      status:
+        type: integer
+    type: object
+  models.UserProfileInput:
+    properties:
+      city:
+        maxLength: 100
+        minLength: 2
+        type: string
+      first_name:
+        maxLength: 50
+        minLength: 2
+        type: string
+      last_name:
+        maxLength: 50
+        minLength: 2
+        type: string
+    required:
+    - city
+    - first_name
+    - last_name
+    type: object
+  models.UserProfileOut:
+    properties:
+      city:
+        type: string
+      created_at:
+        type: string
+      first_name:
+        type: string
+      id:
+        type: string
+      last_name:
+        type: string
+      updated_at:
+        type: string
+      user_id:
+        type: string
+    type: object
+  models.UserProfileUpdate:
+    properties:
+      city:
+        maxLength: 100
+        minLength: 2
+        type: string
+      first_name:
+        maxLength: 50
+        minLength: 2
+        type: string
+      last_name:
+        maxLength: 50
+        minLength: 2
+        type: string
+    type: object
+host: localhost:8081
+info:
+  contact: {}
+  description: Сервис для управления профилем пользователя, включающий создание, обновление,
+    удаление и получение профиля.
+  title: Profile Service
+  version: "1.0"
+paths:
+  /user-profile/:
+    delete:
+      description: Удаляет профиль пользователя по его ID
+      responses:
+        "204":
+          description: Профиль успешно удален
+          schema:
+            $ref: '#/definitions/models.SuccessResponse'
+        "401":
+          description: Не авторизован
+          schema:
+            $ref: '#/definitions/middleware.ValidationErrorResponse'
+        "404":
+          description: Ошибка при удалении пользователя
+          schema:
+            $ref: '#/definitions/middleware.ValidationErrorResponse'
+        "500":
+          description: Внутренняя ошибка сервера
+          schema:
+            $ref: '#/definitions/middleware.ValidationErrorResponse'
+      security:
+      - CookieAuth: []
+      summary: Удалить профиль пользователя
+      tags:
+      - Profile
+    get:
+      description: Получает профиль пользователя по его ID
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Информация о профиле
+          schema:
+            $ref: '#/definitions/models.UserProfileOut'
+        "401":
+          description: Не авторизован
+          schema:
+            $ref: '#/definitions/middleware.ValidationErrorResponse'
+        "404":
+          description: Профиль не найден
+          schema:
+            $ref: '#/definitions/middleware.ValidationErrorResponse'
+        "500":
+          description: Внутренняя ошибка сервера
+          schema:
+            $ref: '#/definitions/middleware.ValidationErrorResponse'
+      security:
+      - CookieAuth: []
+      summary: Получить профиль пользователя
+      tags:
+      - Profile
+    patch:
+      consumes:
+      - application/json
+      description: Обновляет данные профиля пользователя
+      parameters:
+      - description: Новые данные профиля
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/models.UserProfileUpdate'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Профиль успешно обновлен
+          schema:
+            $ref: '#/definitions/models.SuccessResponse'
+        "400":
+          description: Неверный запрос
+          schema:
+            $ref: '#/definitions/middleware.ValidationErrorResponse'
+        "401":
+          description: Не авторизован
+          schema:
+            $ref: '#/definitions/middleware.ValidationErrorResponse'
+        "500":
+          description: Внутренняя ошибка сервера
+          schema:
+            $ref: '#/definitions/middleware.ValidationErrorResponse'
+      security:
+      - CookieAuth: []
+      summary: Обновить профиль пользователя
+      tags:
+      - Profile
+    post:
+      consumes:
+      - application/json
+      description: Создает новый профиль пользователя, если он не существует
+      parameters:
+      - description: Информация о профиле
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/models.UserProfileInput'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Успешно создан профиль
+          schema:
+            $ref: '#/definitions/models.ProfileIdResponse'
+        "400":
+          description: Неверный запрос
+          schema:
+            $ref: '#/definitions/middleware.ValidationErrorResponse'
+        "401":
+          description: Не авторизован
+          schema:
+            $ref: '#/definitions/middleware.ValidationErrorResponse'
+        "500":
+          description: Внутренняя ошибка сервера
+          schema:
+            $ref: '#/definitions/middleware.ValidationErrorResponse'
+      security:
+      - CookieAuth: []
+      summary: Создает профиль пользователя
+      tags:
+      - Profile
+swagger: "2.0"
